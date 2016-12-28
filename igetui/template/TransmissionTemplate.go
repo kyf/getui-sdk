@@ -1,6 +1,6 @@
 package template
 
-import "getui-sdk/protobuf"
+import "github.com/kyf/getui-sdk/protobuf"
 import proto "github.com/golang/protobuf/proto"
 
 type TransmissionTemplate struct {
@@ -15,10 +15,10 @@ type TransmissionTemplate struct {
 func NewTransmissionTemplate(appid string, appkey string, transmissiontype int32,
 	transmissionconntent string) *TransmissionTemplate {
 	return &TransmissionTemplate{
-		BaseTemplate:BaseTemplate{
-			AppId: appid,
-		    AppKey: appkey,
-			},
+		BaseTemplate: BaseTemplate{
+			AppId:  appid,
+			AppKey: appkey,
+		},
 		TransmissionType:    transmissiontype,
 		TransmissionContent: transmissionconntent,
 		PushType:            "TransmissionMsg",
@@ -43,7 +43,7 @@ func (t *TransmissionTemplate) GetTransparent() *protobuf.Transparent {
 		MessageId:   proto.String(""),
 		PushInfo:    t.GetPushInfo(),
 		ActionChain: t.GetActionChains(),
-		Condition :  t.GetDurCondition(),
+		Condition:   t.GetDurCondition(),
 	}
 	return transparent
 }

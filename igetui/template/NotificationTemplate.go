@@ -1,6 +1,6 @@
 package template
 
-import "getui-sdk/protobuf"
+import "github.com/kyf/getui-sdk/protobuf"
 import proto "github.com/golang/protobuf/proto"
 
 type NotificationTemplate struct {
@@ -22,10 +22,10 @@ func NewNotificationTemplate(appid string, appkey string, transmissiontype int32
 	transmissionconntent string, titile string, text string, logo string, isring bool,
 	isvibrate bool, isclearable bool) *NotificationTemplate {
 	return &NotificationTemplate{
-		BaseTemplate:BaseTemplate{
-			AppId: appid,
-		    AppKey: appkey,
-			},
+		BaseTemplate: BaseTemplate{
+			AppId:  appid,
+			AppKey: appkey,
+		},
 		TransmissionType:    transmissiontype,
 		TransmissionContent: transmissionconntent,
 		Title:               titile,
@@ -38,7 +38,6 @@ func NewNotificationTemplate(appid string, appkey string, transmissiontype int32
 	}
 }
 
-
 func (t *NotificationTemplate) GetTransmissionContent() string {
 	return t.TransmissionContent
 }
@@ -46,7 +45,6 @@ func (t *NotificationTemplate) GetTransmissionContent() string {
 func (t *NotificationTemplate) GetPushType() string {
 	return t.PushType
 }
-
 
 func (t *NotificationTemplate) GetTransparent() *protobuf.Transparent {
 	transparent := &protobuf.Transparent{
@@ -58,13 +56,11 @@ func (t *NotificationTemplate) GetTransparent() *protobuf.Transparent {
 		MessageId:   proto.String(""),
 		PushInfo:    t.GetPushInfo(),
 		ActionChain: t.GetActionChains(),
-		Condition :  t.GetDurCondition(),
+		Condition:   t.GetDurCondition(),
 	}
 
 	return transparent
 }
-
-
 
 func (t *NotificationTemplate) GetActionChains() []*protobuf.ActionChain {
 

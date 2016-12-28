@@ -1,12 +1,15 @@
 package template
+
 import "strconv"
-import "getui-sdk/protobuf"
+import "github.com/kyf/getui-sdk/protobuf"
 import "fmt"
 import "time"
 import "strings"
 import "encoding/json"
 import proto "github.com/golang/protobuf/proto"
+
 const APS string = "aps"
+
 type BaseTemplate struct {
 	AppKey   string
 	AppId    string
@@ -33,7 +36,7 @@ func (p *Payload) AddParam(key string, obj interface{}) {
 	}
 	if strings.EqualFold(APS, key) {
 		fmt.Printf("the key can't be aps")
-	}else {
+	} else {
 		p.Params[key] = obj
 	}
 }
@@ -50,7 +53,7 @@ func (p *Payload) ToString() string {
 
 	if len(p.Alert) > 0 {
 		ApsObj["alert"] = p.Alert
-	}else {
+	} else {
 		if len(p.AlertBody) > 0 || len(p.AlertLocKey) > 0 {
 			alertObj := map[string]interface{}{}
 			p.PutIntoJson("body", p.AlertBody, alertObj)
@@ -94,7 +97,6 @@ type ITemplate interface {
 	GetPushType() string
 }
 
-
 func (bt *BaseTemplate) GetPushInfo() *protobuf.PushInfo {
 
 	if bt.PushInfo == nil {
@@ -112,20 +114,19 @@ func (bt *BaseTemplate) GetPushInfo() *protobuf.PushInfo {
 
 }
 
-
 func (bt *BaseTemplate) SetPushInfo(actionLocKey string, badge string, message string,
-sound string, payload string, locKey string, locArgs string, launchImage string, contentAvailable int32) {
+	sound string, payload string, locKey string, locArgs string, launchImage string, contentAvailable int32) {
 
 	PushInfo := protobuf.PushInfo{
-		ActionLocKey :proto.String(actionLocKey),
-		Badge:     proto.String(badge),
-		Message:   proto.String(message),
-		Sound:     proto.String(sound),
-		Payload:  proto.String(payload),
-		LocKey:  proto.String(locKey),
-		LocArgs:  proto.String(locArgs),
-		LaunchImage:  proto.String(launchImage),
-		ContentAvailable:  proto.Int32(contentAvailable),
+		ActionLocKey:     proto.String(actionLocKey),
+		Badge:            proto.String(badge),
+		Message:          proto.String(message),
+		Sound:            proto.String(sound),
+		Payload:          proto.String(payload),
+		LocKey:           proto.String(locKey),
+		LocArgs:          proto.String(locArgs),
+		LaunchImage:      proto.String(launchImage),
+		ContentAvailable: proto.Int32(contentAvailable),
 	}
 
 	bt.PushInfo = PushInfo
@@ -133,12 +134,11 @@ sound string, payload string, locKey string, locArgs string, launchImage string,
 	l := len(bt.ProcessPayload(actionLocKey, badge, message, sound,
 		payload, locKey, locArgs, launchImage, contentAvailable))
 	if l > 512 {
-		fmt.Println("PushInfo length over limit: " + "%d" + ". Allowed: 256.", l)
+		fmt.Println("PushInfo length over limit: "+"%d"+". Allowed: 256.", l)
 		panic("")
 	}
 
 }
-
 
 func (bt *BaseTemplate) SetDuration(begin string, end string) {
 	t1, _ := time.Parse("2006-01-02 15:04:05", begin)
@@ -147,9 +147,9 @@ func (bt *BaseTemplate) SetDuration(begin string, end string) {
 	s2 := (t2.Unix() - 28800) * 1000
 	if s1 > 0 && s2 > 0 && s2 >= s1 {
 		bt.Duration = strconv.FormatInt(s1, 10) + "-" + strconv.FormatInt(s2, 10)
-	}else if s1 > s2 {
+	} else if s1 > s2 {
 		panic("startTime should be smaller than endTime")
-	}else {
+	} else {
 		panic("DateFormat: yyyy-MM-dd HH:mm:ss")
 	}
 }
@@ -164,9 +164,8 @@ func (bt *BaseTemplate) GetDurCondition() []string {
 	return Du
 }
 
-
 func (bt *BaseTemplate) ProcessPayload(actionLocKey string, badge string, message string, sound string,
-payload string, locKey string, locArgs string, launchImage string, contentAvailable int32) string {
+	payload string, locKey string, locArgs string, launchImage string, contentAvailable int32) string {
 	isValid := false
 	pb := new(Payload)
 	if len(locKey) > 0 {
@@ -193,7 +192,7 @@ payload string, locKey string, locArgs string, launchImage string, contentAvaila
 	}
 	if len(sound) > 0 {
 		pb.Sound = sound
-	}else {
+	} else {
 		pb.Sound = "default"
 	}
 	if len(payload) > 0 {
@@ -211,18 +210,3 @@ payload string, locKey string, locArgs string, launchImage string, contentAvaila
 	return jsons
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

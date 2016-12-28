@@ -1,6 +1,6 @@
 package template
 
-import "getui-sdk/protobuf"
+import "github.com/kyf/getui-sdk/protobuf"
 import proto "github.com/golang/protobuf/proto"
 
 type LinkTemplate struct {
@@ -19,15 +19,14 @@ type LinkTemplate struct {
 	TransmissionContent string
 }
 
-
 func NewLinkTemplate(appid string, appkey string, transmissiontype int32,
 	transmissionconntent string, titile string, text string, logo string, url string, isring bool,
 	isvibrate bool, isclearable bool) *LinkTemplate {
 	return &LinkTemplate{
-		BaseTemplate:BaseTemplate{
-			AppId: appid,
-		    AppKey: appkey,
-			},
+		BaseTemplate: BaseTemplate{
+			AppId:  appid,
+			AppKey: appkey,
+		},
 		TransmissionType:    transmissiontype,
 		TransmissionContent: transmissionconntent,
 		Title:               titile,
@@ -41,7 +40,6 @@ func NewLinkTemplate(appid string, appkey string, transmissiontype int32,
 	}
 }
 
-
 func (t *LinkTemplate) GetTransmissionContent() string {
 	return t.TransmissionContent
 }
@@ -49,8 +47,6 @@ func (t *LinkTemplate) GetTransmissionContent() string {
 func (t *LinkTemplate) GetPushType() string {
 	return t.PushType
 }
-
-
 
 func (t *LinkTemplate) GetTransparent() *protobuf.Transparent {
 	transparent := &protobuf.Transparent{
@@ -62,7 +58,7 @@ func (t *LinkTemplate) GetTransparent() *protobuf.Transparent {
 		MessageId:   proto.String(""),
 		PushInfo:    t.GetPushInfo(),
 		ActionChain: t.GetActionChains(),
-		Condition :  t.GetDurCondition(),
+		Condition:   t.GetDurCondition(),
 	}
 	return transparent
 }

@@ -8,7 +8,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-	"getui-sdk/igetui"
+	"github.com/kyf/getui-sdk/igetui"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -21,7 +21,7 @@ type IGeTui struct {
 	Host         string
 	AppKey       string
 	MasterSecret string
-	flag bool
+	flag         bool
 }
 
 func NewIGeTui(host, appkey, mastersecret string) *IGeTui {
@@ -32,45 +32,45 @@ func NewIGeTui(host, appkey, mastersecret string) *IGeTui {
 	}
 }
 
-func (iGeTui *IGeTui) Fast(){
-		if iGeTui.Host ==""{
+func (iGeTui *IGeTui) Fast() {
+	if iGeTui.Host == "" {
 		ln := iGeTui.GetConnOSServerHostList()
-		if len(ln)==1{
-			iGeTui.Host=ln[0]
+		if len(ln) == 1 {
+			iGeTui.Host = ln[0]
 		}
-		if len(ln)>1{
+		if len(ln) > 1 {
 			iGeTui.gethost(ln)
-			for ;iGeTui.Host=="";{
-	   time.Sleep(time.Millisecond)				
+			for iGeTui.Host == "" {
+				time.Sleep(time.Millisecond)
 			}
-		   go iGeTui.timerhost(ln)
-		}	 
+			go iGeTui.timerhost(ln)
+		}
 	}
 }
 
-func (iGeTui *IGeTui) test(url string ) {
-    _,err := http.Get(url)
-    if err !=nil{
-    	return 
-    }else if iGeTui.flag == false{
-    	iGeTui.Host=url
+func (iGeTui *IGeTui) test(url string) {
+	_, err := http.Get(url)
+	if err != nil {
+		return
+	} else if iGeTui.flag == false {
+		iGeTui.Host = url
 		iGeTui.flag = true
-		}
+	}
 }
 
-func (iGeTui *IGeTui) gethost(ln []string){
-	iGeTui.flag =  false
-	for i:=0;i <len(ln);i++ {
+func (iGeTui *IGeTui) gethost(ln []string) {
+	iGeTui.flag = false
+	for i := 0; i < len(ln); i++ {
 		go iGeTui.test(ln[i])
 	}
 }
- 
-func (iGeTui *IGeTui) timerhost(ln []string){	
-	for {	
-		time.Sleep(600*1000*time.Millisecond)
+
+func (iGeTui *IGeTui) timerhost(ln []string) {
+	for {
+		time.Sleep(600 * 1000 * time.Millisecond)
 		go iGeTui.gethost(ln)
 	}
-} 
+}
 
 func (iGeTui *IGeTui) GetConnOSServerHostList() []string {
 	l := iGeTui.GetConfigOsServerHostList()
@@ -101,7 +101,6 @@ func (iGeTui *IGeTui) GetConfigOsServerHostList() []string {
 	}
 	return l
 }
-
 
 func (iGeTui *IGeTui) connect() bool {
 	sign := iGeTui.GetSign(iGeTui.AppKey, iGeTui.GetCurrentTime(), iGeTui.MasterSecret)
@@ -167,25 +166,25 @@ func (iGeTui *IGeTui) PushMessageToSingle(message igetui.IGtSingleMessage, tartg
 
 }
 
-func (iGeTui *IGeTui) PushMessageToAppTg(message igetui.IGtAppMessage,taskGroupName []string) map[string]interface{} {
+func (iGeTui *IGeTui) PushMessageToAppTg(message igetui.IGtAppMessage, taskGroupName []string) map[string]interface{} {
 	params := map[string]interface{}{}
-	contentId := iGeTui.GetContentIdTg(message,taskGroupName)
+	contentId := iGeTui.GetContentIdTg(message, taskGroupName)
 	params["action"] = "pushMessageToAppAction"
 	params["appkey"] = iGeTui.AppKey
 	params["contentId"] = contentId
-    params["type"] = 2
+	params["type"] = 2
 	return iGeTui.HttpPostJson(params)
 }
 
 func (iGeTui *IGeTui) GetContentIdTg(message igetui.IGtAppMessage, taskGroupName []string) interface{} {
-		params := map[string]interface{}{}
-        if taskGroupName != nil {
-            if len(taskGroupName) > 40{
-            	panic("TaskGroupName is OverLimit 40")
-            }else{
-            	params["taskGroupName"] = taskGroupName
-            }                         
-		}       
+	params := map[string]interface{}{}
+	if taskGroupName != nil {
+		if len(taskGroupName) > 40 {
+			panic("TaskGroupName is OverLimit 40")
+		} else {
+			params["taskGroupName"] = taskGroupName
+		}
+	}
 	params["action"] = "getContentIdAction"
 	params["appkey"] = iGeTui.AppKey
 	transparent := message.Data.GetTransparent()
@@ -248,8 +247,7 @@ func (iGeTui *IGeTui) PushMessageToList(contentId string, targets []igetui.Targe
 }
 
 func (iGeTui *IGeTui) GetContentId(message igetui.IGtListMessage) interface{} {
-	
-	
+
 	params := map[string]interface{}{}
 	params["action"] = "getContentIdAction"
 	params["appkey"] = iGeTui.AppKey
@@ -270,9 +268,6 @@ func (iGeTui *IGeTui) GetContentId(message igetui.IGtListMessage) interface{} {
 		return " "
 	}
 }
-
-
-
 
 func (iGeTui *IGeTui) GetAPNContentId(appId string, message igetui.IGtListMessage) interface{} {
 	params := map[string]interface{}{}
@@ -304,8 +299,6 @@ func (iGeTui *IGeTui) cancelContentId(contentId string) bool {
 		return false
 	}
 }
-
-
 
 //hxh
 func (iGeTui *IGeTui) Stop(contentId string) bool {
@@ -449,7 +442,6 @@ func (iGeTui *IGeTui) HttpPostJson(params map[string]interface{}) map[string]int
 
 func (iGeTui *IGeTui) HttpPost(params map[string]interface{}) map[string]interface{} {
 	data, _ := json.Marshal(params)
-	//fmt.Printf("%s\n", data)
 	tryTime := 1
 tryAgain:
 	res, err := http.Post(iGeTui.Host, "application/json", strings.NewReader(string(data)))
@@ -462,6 +454,7 @@ tryAgain:
 		return map[string]interface{}{"result": "post error"}
 	}
 	body, _ := ioutil.ReadAll(res.Body)
+	defer res.Body.Close()
 	var ret map[string]interface{}
 	json.Unmarshal(body, &ret)
 	return ret
