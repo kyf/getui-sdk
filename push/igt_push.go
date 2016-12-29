@@ -111,13 +111,10 @@ func (iGeTui *IGeTui) connect() bool {
 	params["sign"] = sign
 
 	rep := iGeTui.HttpPost(params)
-	fmt.Println("rep")
-	fmt.Println(rep)
 	if "success" == rep["result"] {
 		return true
 	} else {
 		fmt.Println("connect failed")
-		panic("")
 	}
 	return false
 }
